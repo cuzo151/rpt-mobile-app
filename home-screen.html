@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RPT — Rohnert Park Transmission & Auto Repair</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#dc2626">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* === BRAND CONSTANTS === */
+  :root {
+    --red: #dc2626;
+    --red-bright: #ef4444;
+    --red-dim: #b91c1c;
+    --yellow: #f59e0b;
+    --yellow-bright: #fbbf24;
+    --yellow-dim: #d97706;
+
+    /* Semantic tokens — LIGHT THEME (default) */
+    --bg: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-elevated: #F3F4F6;
+    --bg-inset: #E5E7EB;
+    --bg-nav: rgba(255,255,255,0.95);
+
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #9CA3AF;
+    --text-on-accent: #FFFFFF;
+
+    --border: #E5E7EB;
+    --border-subtle: #F3F4F6;
+
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+
+    --accent-glow: rgba(220, 38, 38, 0.1);
+    --accent-subtle: rgba(220, 38, 38, 0.05);
+    --accent-border: rgba(220, 38, 38, 0.1);
+
+    --green: #16a34a;
+    --green-dim: #15803d;
+    --status-red: #dc2626;
+    --status-yellow: #f59e0b;
+    --tan: #92400e;
+
+    --hero-glow: rgba(220,38,38,0.06);
+    --hero-bg-start: #F3F4F6;
+    --hero-bg-end: #E5E7EB;
+    --hero-car-shadow: rgba(0,0,0,0.15);
+
+    --overlay-scanlines: 0;
+    --overlay-pattern: 0.015;
+  }
+
+  /* === DARK THEME === */
+  [data-theme="dark"] {
+    --bg: #000000;
+    --bg-card: #0A0A0A;
+    --bg-elevated: #111111;
+    --bg-inset: #252525;
+    --bg-nav: rgba(10,10,10,0.95);
+
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255,255,255,0.7);
+    --text-muted: rgba(255,255,255,0.4);
+
+    --border: rgba(220,38,38,0.15);
+    --border-subtle: rgba(220,38,38,0.08);
+
+    --shadow-card: none;
+    --shadow-md: none;
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.4);
+
+    --accent-glow: rgba(220,38,38,0.3);
+    --accent-subtle: rgba(220,38,38,0.08);
+    --accent-border: rgba(220,38,38,0.15);
+
+    --green: #00E676;
+    --green-dim: #00c853;
+    --tan: #d4b896;
+
+    --hero-glow: rgba(220,38,38,0.15);
+    --hero-bg-start: #0A0A0A;
+    --hero-bg-end: #080808;
+    --hero-car-shadow: rgba(220,38,38,0.2);
+
+    --overlay-scanlines: 1;
+    --overlay-pattern: 0.03;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { font-size: 16px; background: var(--bg); transition: background 0.3s; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    max-width: 430px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    position: relative;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* === SCAN LINE OVERLAY (dark theme only) === */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(220, 38, 38, 0.015) 2px, rgba(220, 38, 38, 0.015) 4px);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: var(--overlay-scanlines);
+    transition: opacity 0.3s;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: var(--overlay-pattern);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23dc2626' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.3s;
+  }
+
+  /* === SCREENS === */
+  .screen { display: none; padding-bottom: 90px; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* === STATUS BAR === */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px 8px;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 14px;
+    color: var(--text-primary); position: relative; z-index: 10;
+  }
+  .status-bar-icons { display: flex; gap: 6px; align-items: center; }
+
+  /* === HEADER === */
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 20px 16px; position: relative; z-index: 10;
+  }
+  .logo-group { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 36px; height: 36px; }
+  .logo-mark svg { width: 100%; height: 100%; }
+  .logo-text {
+    font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 15px;
+    letter-spacing: 2px; color: var(--text-primary); text-transform: uppercase; line-height: 1.1;
+  }
+  .logo-text span { color: var(--red); }
+  .logo-subtext {
+    font-family: 'Rajdhani', sans-serif; font-size: 9px; font-weight: 500;
+    color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 1px;
+  }
+  .header-actions { display: flex; gap: 12px; align-items: center; }
+  .header-btn {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; position: relative; transition: all 0.3s ease;
+    box-shadow: var(--shadow-card);
+  }
+  .header-btn:hover { border-color: var(--red); box-shadow: var(--shadow-md); }
+  .header-btn svg { width: 20px; height: 20px; stroke: var(--text-muted); }
+  .notification-dot {
+    position: absolute; top: 8px; right: 8px; width: 7px; height: 7px;
+    background: var(--red); border-radius: 50%; box-shadow: 0 0 6px var(--red);
+  }
+
+  /* === THEME TOGGLE === */
+  .theme-toggle { position: relative; }
+  .theme-toggle .sun-icon { display: none; }
+  .theme-toggle .moon-icon { display: block; }
+  [data-theme="dark"] .theme-toggle .sun-icon { display: block; }
+  [data-theme="dark"] .theme-toggle .moon-icon { display: none; }
+
+  /* === SECTION SHARED === */
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .section-title {
+    font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--text-primary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before {
+    content: ''; width: 3px; height: 14px;
+    background: var(--red); border-radius: 2px; box-shadow: 0 0 8px var(--accent-glow);
+  }
+  .section-link {
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--red); text-decoration: none; letter-spacing: 1px;
+    text-transform: uppercase; transition: all 0.3s ease; cursor: pointer;
+  }
+  .section-link:hover { text-shadow: 0 0 10px var(--accent-glow); }
+
+  /* === CARD BASE === */
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    position: relative; overflow: hidden; cursor: pointer; transition: all 0.3s ease;
+    box-shadow: var(--shadow-card);
+  }
+  .card:hover { border-color: var(--red); box-shadow: var(--shadow-md); }
+  .card-glow-left::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--red); border-radius: 0 2px 2px 0; box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  /* === HERO VEHICLE SECTION === */
+  .hero-section {
+    position: relative; height: 280px; margin: 0 16px;
+    border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 80%, var(--hero-glow) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 20%, var(--accent-subtle) 0%, transparent 50%),
+      linear-gradient(180deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
+  }
+  .hero-vehicle-img {
+    position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    width: 110%; max-width: 480px; height: auto;
+    filter: drop-shadow(0 20px 40px var(--hero-car-shadow));
+    animation: vehicleFloat 4s ease-in-out infinite; z-index: 2;
+  }
+  @keyframes vehicleFloat {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-6px); }
+  }
+  .hero-hud-overlay { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+  .corner-bracket {
+    position: absolute; width: 20px; height: 20px;
+    border-color: var(--red); border-style: solid; border-width: 0; opacity: 0.5;
+  }
+  .corner-bracket.tl { top: 12px; left: 12px; border-top-width: 2px; border-left-width: 2px; }
+  .corner-bracket.tr { top: 12px; right: 12px; border-top-width: 2px; border-right-width: 2px; }
+  .corner-bracket.bl { bottom: 12px; left: 12px; border-bottom-width: 2px; border-left-width: 2px; }
+  .corner-bracket.br { bottom: 12px; right: 12px; border-bottom-width: 2px; border-right-width: 2px; }
+
+  .hero-vehicle-name { position: absolute; top: 20px; left: 20px; z-index: 4; }
+  .hero-vehicle-name .label {
+    font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 3px; color: var(--red); text-transform: uppercase; margin-bottom: 4px;
+  }
+  .hero-vehicle-name .name {
+    font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700;
+    letter-spacing: 1px; color: var(--text-primary);
+  }
+  .hero-vehicle-name .sub {
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--text-muted); margin-top: 2px; letter-spacing: 1px;
+  }
+  .hero-stats { position: absolute; top: 20px; right: 20px; z-index: 4; text-align: right; }
+  .hero-stat { margin-bottom: 8px; }
+  .hero-stat .value {
+    font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; color: var(--red);
+  }
+  .hero-stat .unit {
+    font-family: 'Rajdhani', sans-serif; font-size: 11px;
+    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* === GAUGE === */
+  .gauge-section { padding: 24px 16px 16px; position: relative; z-index: 2; }
+  .gauge-container {
+    display: flex; align-items: center; gap: 20px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px; position: relative; overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .gauge-container::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent); opacity: 0.3;
+  }
+  .arc-gauge { width: 140px; height: 140px; flex-shrink: 0; position: relative; }
+  .arc-gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .gauge-bg { fill: none; stroke: var(--bg-inset); stroke-width: 6; }
+  .gauge-fill {
+    fill: none; stroke: url(#gaugeGradient); stroke-width: 6; stroke-linecap: round;
+    stroke-dasharray: 339.292; stroke-dashoffset: 50.89;
+    transition: stroke-dashoffset 1.5s ease;
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+  }
+  .gauge-inner-ring { fill: none; stroke: var(--accent-border); stroke-width: 1; }
+  .gauge-center-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .gauge-percent { font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+  .gauge-percent-sign { font-size: 16px; color: var(--red); }
+  .gauge-label {
+    font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 500;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px;
+  }
+  .gauge-details { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .gauge-detail-row { display: flex; justify-content: space-between; align-items: center; }
+  .gauge-detail-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+  .gauge-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .gauge-dot.green { background: var(--green); box-shadow: 0 0 6px rgba(0, 230, 118, 0.4); }
+  .gauge-dot.yellow { background: var(--yellow); box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
+  .gauge-dot.red { background: var(--red); box-shadow: 0 0 6px var(--accent-glow); }
+  .gauge-detail-value { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .gauge-detail-bar { height: 3px; background: var(--bg-inset); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .gauge-detail-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--red-bright));
+    border-radius: 2px; box-shadow: 0 0 8px var(--accent-glow); transition: width 1.5s ease;
+  }
+  .gauge-tick { fill: none; stroke: var(--bg-inset); stroke-width: 1; }
+
+  /* === SERVICES GRID === */
+  .services-section { padding: 8px 16px 16px; position: relative; z-index: 2; }
+  .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .service-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all 0.3s ease; }
+  .service-item:hover .service-icon { border-color: var(--red); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .service-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease; position: relative; overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .service-icon::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--accent-subtle), transparent 70%);
+  }
+  .service-icon svg { width: 24px; height: 24px; stroke: var(--red); position: relative; z-index: 1; }
+  .service-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-align: center; letter-spacing: 0.5px; }
+
+  /* === REPAIR CARDS === */
+  .repairs-section { padding: 8px 16px 16px; position: relative; z-index: 2; }
+  .repair-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    position: relative; overflow: hidden; cursor: pointer; transition: all 0.3s ease;
+    box-shadow: var(--shadow-card);
+  }
+  .repair-card:hover { border-color: var(--red); box-shadow: var(--shadow-md); }
+  .repair-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--red); border-radius: 0 2px 2px 0; box-shadow: 0 0 10px var(--accent-glow);
+  }
+  .repair-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .repair-title { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1px; color: var(--text-primary); }
+  .repair-id { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+  .repair-status {
+    font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+  }
+  .repair-status.in-progress { color: var(--red); background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.2); }
+  .repair-status.scheduled { color: var(--text-muted); background: var(--bg-elevated); border: 1px solid var(--border); }
+  .repair-status.completed { color: var(--green); background: rgba(22, 163, 74, 0.1); border: 1px solid rgba(22, 163, 74, 0.2); }
+  .repair-progress { display: flex; align-items: center; gap: 12px; }
+  .repair-progress-bar { flex: 1; height: 4px; background: var(--bg-inset); border-radius: 2px; overflow: hidden; }
+  .repair-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red-dim), var(--red));
+    border-radius: 2px; box-shadow: 0 0 8px var(--accent-glow); transition: width 1s ease;
+  }
+  .repair-progress-fill.green { background: linear-gradient(90deg, var(--green-dim), var(--green)); }
+  .repair-progress-text { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600; color: var(--red); min-width: 35px; text-align: right; }
+  .repair-progress-text.green { color: var(--green); }
+  .repair-meta { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+  .repair-meta-item { display: flex; align-items: center; gap: 6px; }
+  .repair-meta-item svg { width: 14px; height: 14px; stroke: var(--text-muted); }
+  .repair-meta-item span { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+  /* === CTA BUTTON === */
+  .cta-section { padding: 8px 16px 24px; position: relative; z-index: 2; }
+  .cta-button {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--red) 0%, var(--red-dim) 100%);
+    border: none; border-radius: 16px; cursor: pointer;
+    position: relative; overflow: hidden; transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+  }
+  .cta-button:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4); }
+  .cta-button::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: ctaShimmer 3s infinite;
+  }
+  @keyframes ctaShimmer { 0% { left: -100%; } 100% { left: 100%; } }
+  .cta-button-text {
+    font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--text-on-accent); letter-spacing: 3px; text-transform: uppercase;
+  }
+  .cta-button svg { width: 20px; height: 20px; stroke: var(--text-on-accent); }
+
+  /* === BOTTOM NAV === */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    background: var(--bg-nav);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; padding: 8px 12px; border-radius: 12px;
+    transition: all 0.3s ease; position: relative; background: none; border: none;
+  }
+  .nav-item.active::before {
+    content: ''; position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+    width: 20px; height: 3px; background: var(--red);
+    border-radius: 0 0 3px 3px; box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .nav-item svg { width: 22px; height: 22px; stroke: var(--text-muted); transition: all 0.3s ease; }
+  .nav-item.active svg { stroke: var(--red); filter: drop-shadow(0 0 4px var(--accent-glow)); }
+  .nav-label {
+    font-family: 'Rajdhani', sans-serif; font-size: 10px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;
+  }
+  .nav-item.active .nav-label { color: var(--red); }
+  .nav-spacer { height: 90px; }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+  @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+  .pulse-glow { animation: pulse 2s ease-in-out infinite; }
+
+  .hero-section { animation: scaleIn 0.6s ease both; }
+  .gauge-section { animation: fadeInUp 0.6s ease 0.15s both; }
+  .services-section { animation: fadeInUp 0.6s ease 0.25s both; }
+  .repairs-section { animation: fadeInUp 0.6s ease 0.35s both; }
+  .cta-section { animation: fadeInUp 0.6s ease 0.45s both; }
+
+  /* ============================================ */
+  /* TRACKER SCREEN                                */
+  /* ============================================ */
+  .tracker-screen { padding: 0 16px; }
+  .screen-title-bar {
+    padding: 16px 0 20px;
+    font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700;
+    letter-spacing: 2px; color: var(--text-primary); text-align: center;
+  }
+
+  /* Order lookup */
+  .order-lookup {
+    display: flex; gap: 10px; margin-bottom: 24px;
+  }
+  .order-lookup input {
+    flex: 1; padding: 14px 16px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text-primary);
+    font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 2px;
+    outline: none; transition: border-color 0.3s; box-shadow: var(--shadow-card);
+  }
+  .order-lookup input::placeholder { color: var(--text-muted); letter-spacing: 1px; font-family: 'Rajdhani', sans-serif; }
+  .order-lookup input:focus { border-color: var(--red); }
+  .order-lookup button {
+    padding: 14px 20px; background: var(--red); border: none;
+    border-radius: 12px; cursor: pointer;
+    font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700;
+    color: var(--text-on-accent); letter-spacing: 2px; text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .order-lookup button:hover { background: var(--red-bright); }
+
+  /* Tracker detail card */
+  .tracker-detail-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px; margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .tracker-vehicle {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle);
+  }
+  .tracker-vehicle-info .tv-label {
+    font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 3px; color: var(--red); text-transform: uppercase; margin-bottom: 4px;
+  }
+  .tracker-vehicle-info .tv-name {
+    font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-primary);
+  }
+  .tracker-vehicle-info .tv-sub {
+    font-size: 13px; color: var(--text-muted); margin-top: 2px;
+  }
+  .tracker-order-badge {
+    font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 600;
+    color: var(--yellow); background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    padding: 6px 12px; border-radius: 20px; letter-spacing: 1px;
+  }
+
+  /* Timeline */
+  .repair-timeline { position: relative; padding-left: 32px; }
+  .repair-timeline::before {
+    content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--bg-inset);
+  }
+  .timeline-step { position: relative; padding-bottom: 28px; }
+  .timeline-step:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute; left: -32px; top: 2px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+  .timeline-dot.done {
+    background: var(--green); box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
+  }
+  .timeline-dot.done svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 3; }
+  .timeline-dot.active {
+    background: var(--red); box-shadow: 0 0 12px var(--accent-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .timeline-dot.active::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid var(--red); opacity: 0.3;
+  }
+  .timeline-dot.pending {
+    background: var(--bg-inset); border: 2px solid var(--border);
+  }
+  .timeline-step-title {
+    font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; color: var(--text-primary); margin-bottom: 4px;
+  }
+  .timeline-step.done-step .timeline-step-title { color: var(--text-secondary); }
+  .timeline-step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+  .timeline-step-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+  .timeline-step.active-step .timeline-step-title { color: var(--red-bright); }
+
+  /* Technician card */
+  .tech-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .tech-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--bg-elevated); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; color: var(--red);
+  }
+  .tech-info { flex: 1; }
+  .tech-name { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .tech-role { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .tech-contact-btn {
+    padding: 8px 16px; background: none; border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
+    color: var(--red); letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .tech-contact-btn:hover { border-color: var(--red); background: var(--accent-subtle); }
+
+  /* ============================================ */
+  /* BOOKINGS SCREEN                               */
+  /* ============================================ */
+  .bookings-screen { padding: 0 16px; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px; margin-bottom: 20px;
+    background: var(--bg-elevated); border-radius: 12px; padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .tab-btn {
+    flex: 1; padding: 10px 8px; border: none; border-radius: 10px;
+    background: transparent; cursor: pointer;
+    font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .tab-btn.active { background: var(--red); color: var(--text-on-accent); box-shadow: 0 2px 10px var(--accent-glow); }
+
+  /* Tab content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+  /* Appointment card */
+  .appt-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    display: flex; gap: 14px; align-items: center; cursor: pointer; transition: all 0.3s;
+    box-shadow: var(--shadow-card);
+  }
+  .appt-card:hover { border-color: var(--red); }
+  .appt-date-badge {
+    width: 56px; height: 60px; border-radius: 12px;
+    background: var(--accent-subtle); border: 1px solid var(--accent-border);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .appt-date-badge .month {
+    font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 600;
+    color: var(--red); text-transform: uppercase; letter-spacing: 2px;
+  }
+  .appt-date-badge .day {
+    font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 800;
+    color: var(--text-primary); line-height: 1;
+  }
+  .appt-details { flex: 1; }
+  .appt-service {
+    font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; color: var(--text-primary); margin-bottom: 4px;
+  }
+  .appt-time { font-size: 13px; color: var(--text-muted); }
+  .appt-vehicle-tag {
+    font-size: 11px; color: var(--yellow); margin-top: 4px;
+    font-weight: 500; letter-spacing: 0.5px;
+  }
+  .appt-arrow { color: var(--text-muted); font-size: 18px; }
+
+  /* Book form */
+  .book-form { animation: fadeInUp 0.4s ease; }
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; color: var(--text-secondary); text-transform: uppercase;
+    margin-bottom: 8px; display: block;
+  }
+  .form-input, .form-select {
+    width: 100%; padding: 14px 16px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 500;
+    outline: none; transition: border-color 0.3s; appearance: none;
+    box-shadow: var(--shadow-card);
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--red); }
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .form-select option { background: var(--bg-card); color: var(--text-primary); }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; }
+  .form-note {
+    font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;
+  }
+
+  /* ============================================ */
+  /* MAINTENANCE SCREEN                            */
+  /* ============================================ */
+  .maint-screen { padding: 0 16px; }
+
+  .maint-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    transition: all 0.3s; box-shadow: var(--shadow-card);
+  }
+  .maint-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .maint-service-name {
+    font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; color: var(--text-primary);
+  }
+  .maint-due-badge {
+    font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 600;
+    letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+  }
+  .maint-due-badge.urgent { color: var(--status-red); background: rgba(255, 61, 0, 0.1); border: 1px solid rgba(255, 61, 0, 0.2); }
+  .maint-due-badge.soon { color: var(--yellow); background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); }
+  .maint-due-badge.good { color: var(--green); background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.2); }
+  .maint-progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .maint-bar { flex: 1; height: 6px; background: var(--bg-inset); border-radius: 3px; overflow: hidden; }
+  .maint-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .maint-bar-fill.red { background: linear-gradient(90deg, #ff3d00, #ff6e40); }
+  .maint-bar-fill.yellow { background: linear-gradient(90deg, #d97706, #f59e0b); }
+  .maint-bar-fill.green { background: linear-gradient(90deg, #00c853, #00E676); }
+  .maint-percentage {
+    font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600;
+    min-width: 40px; text-align: right;
+  }
+  .maint-percentage.red { color: var(--status-red); }
+  .maint-percentage.yellow { color: var(--yellow); }
+  .maint-percentage.green { color: var(--green); }
+  .maint-detail-row { display: flex; justify-content: space-between; }
+  .maint-detail { font-size: 12px; color: var(--text-secondary); }
+  .maint-detail strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Service History */
+  .history-item {
+    display: flex; gap: 14px; align-items: center;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 14px 16px; margin-bottom: 10px;
+    box-shadow: var(--shadow-card);
+  }
+  .history-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(0, 230, 118, 0.08); border: 1px solid rgba(0, 230, 118, 0.15);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .history-icon svg { width: 18px; height: 18px; stroke: var(--green); }
+  .history-info { flex: 1; }
+  .history-service { font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.5px; }
+  .history-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .history-cost { font-family: 'Orbitron', sans-serif; font-size: 13px; font-weight: 600; color: var(--tan); }
+
+  /* ============================================ */
+  /* PROFILE SCREEN                                */
+  /* ============================================ */
+  .profile-screen { padding: 0 16px; }
+
+  .profile-header-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px; margin-bottom: 16px; text-align: center;
+    box-shadow: var(--shadow-card);
+  }
+  .profile-avatar {
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 12px;
+    background: linear-gradient(135deg, var(--red), var(--red-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 800; color: #fff;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  .profile-name { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .profile-member { font-size: 12px; color: var(--text-muted); }
+  .profile-stats-row {
+    display: flex; justify-content: space-around; margin-top: 16px;
+    padding-top: 16px; border-top: 1px solid var(--border-subtle);
+  }
+  .profile-stat { text-align: center; }
+  .profile-stat-value { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; color: var(--red); }
+  .profile-stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+  /* Vehicle detail card */
+  .vehicle-detail-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .vehicle-detail-row {
+    display: flex; justify-content: space-between; padding: 10px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .vehicle-detail-row:last-child { border-bottom: none; }
+  .vd-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+  .vd-value { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.5px; }
+
+  /* Shop info */
+  .shop-info-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .shop-info-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; }
+  .shop-info-row svg { width: 18px; height: 18px; stroke: var(--red); flex-shrink: 0; margin-top: 2px; }
+  .shop-info-text { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+  .shop-info-text a { color: var(--red); text-decoration: none; }
+  .shop-info-text .small { font-size: 12px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+  /* Menu items */
+  .menu-item {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 8px;
+    cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow-card);
+  }
+  .menu-item:hover { border-color: var(--red); }
+  .menu-item svg { width: 20px; height: 20px; stroke: var(--text-muted); }
+  .menu-item span { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+  .menu-item .chevron { color: var(--text-muted); font-size: 16px; }
+
+  /* === NOTIFICATION SCREEN === */
+  .notif-screen { padding: 0 16px; }
+  .notif-card {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; margin-bottom: 10px;
+    box-shadow: var(--shadow-card); position: relative; overflow: hidden;
+  }
+  .notif-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    border-radius: 0 2px 2px 0;
+  }
+  .notif-card.notif-repair::before { background: var(--red); }
+  .notif-card.notif-reminder::before { background: var(--yellow); }
+  .notif-card.notif-complete::before { background: var(--green); }
+  .notif-card.unread { border-color: var(--accent-border); }
+  .notif-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .notif-repair .notif-icon { background: rgba(220,38,38,0.08); }
+  .notif-repair .notif-icon svg { stroke: var(--red); }
+  .notif-reminder .notif-icon { background: rgba(245,158,11,0.08); }
+  .notif-reminder .notif-icon svg { stroke: var(--yellow); }
+  .notif-complete .notif-icon { background: rgba(22,163,74,0.08); }
+  .notif-complete .notif-icon svg { stroke: var(--green); }
+  .notif-icon svg { width: 18px; height: 18px; }
+  .notif-body { flex: 1; }
+  .notif-title {
+    font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 600;
+    color: var(--text-primary); letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .notif-msg { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+  .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR (shared) -->
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-bar-icons">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>
+    </svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="10" x2="23" y2="14"/>
+    </svg>
+  </div>
+</div>
+
+<!-- HEADER (shared) -->
+<div class="header">
+  <div class="logo-group">
+    <div class="logo-mark">
+      <svg viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="15" stroke="#dc2626" stroke-width="1" fill="none" opacity="0.3"/>
+        <circle cx="18" cy="18" r="11" stroke="#dc2626" stroke-width="1.5" fill="none"/>
+        <rect x="16" y="1" width="4" height="5" rx="1" fill="#dc2626" opacity="0.8"/>
+        <rect x="16" y="30" width="4" height="5" rx="1" fill="#dc2626" opacity="0.8"/>
+        <rect x="1" y="16" width="5" height="4" rx="1" fill="#dc2626" opacity="0.8"/>
+        <rect x="30" y="16" width="5" height="4" rx="1" fill="#dc2626" opacity="0.8"/>
+        <rect x="4.5" y="5.5" width="4" height="3.5" rx="1" fill="#dc2626" opacity="0.6" transform="rotate(-45 6.5 7.25)"/>
+        <rect x="27.5" y="27" width="4" height="3.5" rx="1" fill="#dc2626" opacity="0.6" transform="rotate(-45 29.5 28.75)"/>
+        <rect x="27.5" y="5.5" width="4" height="3.5" rx="1" fill="#dc2626" opacity="0.6" transform="rotate(45 29.5 7.25)"/>
+        <rect x="4.5" y="27" width="4" height="3.5" rx="1" fill="#dc2626" opacity="0.6" transform="rotate(45 6.5 28.75)"/>
+        <circle cx="18" cy="18" r="6" stroke="#dc2626" stroke-width="1.5" fill="none"/>
+        <circle cx="18" cy="18" r="2.5" fill="#dc2626"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text"><span>RPT</span></div>
+      <div class="logo-subtext">Rohnert Park Transmission</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="header-btn theme-toggle" onclick="toggleTheme()">
+      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </div>
+    <div class="header-btn" onclick="switchScreen('notifications')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <div class="notification-dot"></div>
+    </div>
+    <div class="header-btn" onclick="switchScreen('profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= -->
+<!-- SCREEN: HOME                   -->
+<!-- ============================= -->
+<div class="screen active" id="screen-home">
+
+  <!-- HERO VEHICLE -->
+  <div class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-hud-overlay">
+      <div class="corner-bracket tl"></div>
+      <div class="corner-bracket tr"></div>
+      <div class="corner-bracket bl"></div>
+      <div class="corner-bracket br"></div>
+    </div>
+    <div class="hero-vehicle-name">
+      <div class="label">My Vehicle</div>
+      <div class="name">BMW M3</div>
+      <div class="sub">2024 · Competition xDrive</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="value">12,480</div>
+        <div class="unit">Miles</div>
+      </div>
+      <div class="hero-stat">
+        <div class="value">Mar 18</div>
+        <div class="unit">Next Service</div>
+      </div>
+    </div>
+    <svg class="hero-vehicle-img" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="400" cy="285" rx="300" ry="15" fill="url(#shadowGrad)" opacity="0.6"/>
+      <path d="M120 210 C120 210 140 200 160 195 L200 180 C220 170 260 145 300 135 L380 120 C420 115 460 115 500 120 L580 135 C610 142 640 155 660 170 L700 195 C720 200 740 210 740 210 L740 230 C740 235 738 240 730 240 L680 245 L630 245 C630 245 620 220 590 220 C560 220 550 245 550 245 L310 245 C310 245 300 220 270 220 C240 220 230 245 230 245 L180 245 L130 245 C122 245 120 240 120 235 Z" fill="#dc2626"/>
+      <path d="M160 195 L200 180 C220 170 260 145 300 135 L380 120 C420 115 460 115 500 120 L580 135 C610 142 640 155 660 170 L700 195" stroke="#ef4444" stroke-width="1" fill="none" opacity="0.6"/>
+      <path d="M290 135 L340 108 C360 100 440 100 460 108 L510 135" fill="#1a1a1a" stroke="#ef4444" stroke-width="0.5" opacity="0.8"/>
+      <path d="M270 140 L290 135 L340 108 C350 103 360 103 360 103 L360 140 Z" fill="#1a1a1a" stroke="#ef4444" stroke-width="0.5" opacity="0.6"/>
+      <path d="M530 140 L510 135 L460 108 C450 103 440 103 440 103 L440 140 Z" fill="#1a1a1a" stroke="#ef4444" stroke-width="0.5" opacity="0.6"/>
+      <path d="M155 200 L185 192 L185 205 Z" fill="#f59e0b" opacity="0.9"/>
+      <path d="M705 200 L675 192 L675 205 Z" fill="#f59e0b" opacity="0.9"/>
+      <path d="M360 200 L440 200 L435 210 L365 210 Z" fill="#111" stroke="#dc2626" stroke-width="0.5"/>
+      <line x1="380" y1="200" x2="378" y2="210" stroke="#dc2626" stroke-width="0.3" opacity="0.5"/>
+      <line x1="400" y1="200" x2="400" y2="210" stroke="#dc2626" stroke-width="0.3" opacity="0.5"/>
+      <line x1="420" y1="200" x2="422" y2="210" stroke="#dc2626" stroke-width="0.3" opacity="0.5"/>
+      <circle cx="270" cy="235" r="30" fill="#111"/>
+      <circle cx="270" cy="235" r="25" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+      <circle cx="270" cy="235" r="18" fill="#222" stroke="#444" stroke-width="0.5"/>
+      <circle cx="270" cy="235" r="8" fill="#111" stroke="#dc2626" stroke-width="0.5"/>
+      <circle cx="590" cy="235" r="30" fill="#111"/>
+      <circle cx="590" cy="235" r="25" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+      <circle cx="590" cy="235" r="18" fill="#222" stroke="#444" stroke-width="0.5"/>
+      <circle cx="590" cy="235" r="8" fill="#111" stroke="#dc2626" stroke-width="0.5"/>
+      <line x1="160" y1="195" x2="700" y2="195" stroke="#b91c1c" stroke-width="0.5" opacity="0.4"/>
+      <path d="M340 108 C370 98 430 98 460 108" stroke="rgba(220,38,38,0.3)" stroke-width="1" fill="none"/>
+      <defs>
+        <radialGradient id="shadowGrad">
+          <stop offset="0%" stop-color="#dc2626" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#dc2626" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- VEHICLE HEALTH GAUGE -->
+  <div class="gauge-section">
+    <div class="section-header">
+      <div class="section-title">Vehicle Health</div>
+      <a class="section-link" onclick="switchScreen('maintenance')">Details →</a>
+    </div>
+    <div class="gauge-container">
+      <div class="arc-gauge">
+        <svg viewBox="0 0 120 120">
+          <defs>
+            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#b91c1c"/>
+              <stop offset="50%" stop-color="#dc2626"/>
+              <stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="60" r="56" class="gauge-tick" stroke-dasharray="2 8"/>
+          <circle cx="60" cy="60" r="54" class="gauge-bg"/>
+          <circle cx="60" cy="60" r="44" class="gauge-inner-ring"/>
+          <circle cx="60" cy="60" r="54" class="gauge-fill"/>
+        </svg>
+        <div class="gauge-center-text">
+          <div class="gauge-percent">85<span class="gauge-percent-sign">%</span></div>
+          <div class="gauge-label">Overall</div>
+        </div>
+      </div>
+      <div class="gauge-details">
+        <div class="gauge-detail-row">
+          <span class="gauge-detail-label"><span class="gauge-dot green"></span>Transmission</span>
+          <span class="gauge-detail-value">94%</span>
+        </div>
+        <div class="gauge-detail-row">
+          <span class="gauge-detail-label"><span class="gauge-dot green"></span>Brakes</span>
+          <span class="gauge-detail-value">88%</span>
+        </div>
+        <div class="gauge-detail-row">
+          <span class="gauge-detail-label"><span class="gauge-dot yellow"></span>Engine</span>
+          <span class="gauge-detail-value">72%</span>
+        </div>
+        <div class="gauge-detail-row">
+          <span class="gauge-detail-label"><span class="gauge-dot red"></span>Trans Fluid</span>
+          <span class="gauge-detail-value">45%</span>
+        </div>
+        <div class="gauge-detail-bar">
+          <div class="gauge-detail-bar-fill" style="width: 85%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK SERVICES -->
+  <div class="services-section">
+    <div class="section-header">
+      <div class="section-title">Services</div>
+      <a class="section-link" onclick="switchScreen('bookings')">View All →</a>
+    </div>
+    <div class="services-grid">
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5"/><circle cx="9" cy="9" r="2"/><circle cx="17" cy="17" r="4"/><circle cx="17" cy="17" r="1.5"/><path d="M13 13L14 14"/></svg>
+        </div>
+        <span class="service-label">Transmiss.</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <span class="service-label">Diagnostics</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/></svg>
+        </div>
+        <span class="service-label">Brakes</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C12 2 5 10 5 14.5C5 18.64 8.13 22 12 22C15.87 22 19 18.64 19 14.5C19 10 12 2 12 2Z"/></svg>
+        </div>
+        <span class="service-label">Oil Change</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+        </div>
+        <span class="service-label">Tires</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <span class="service-label">Tune-Up</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <span class="service-label">Electrical</span>
+      </div>
+      <div class="service-item" onclick="switchScreen('bookings')">
+        <div class="service-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <span class="service-label">Schedule</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVE REPAIRS -->
+  <div class="repairs-section">
+    <div class="section-header">
+      <div class="section-title">Active Repairs</div>
+      <a class="section-link" onclick="switchScreen('tracker')">Track →</a>
+    </div>
+    <div class="repair-card" onclick="switchScreen('tracker')">
+      <div class="repair-card-header">
+        <div>
+          <div class="repair-title">Transmission Rebuild</div>
+          <div class="repair-id">RPT-2026-0847</div>
+        </div>
+        <div class="repair-status in-progress">In Progress</div>
+      </div>
+      <div class="repair-progress">
+        <div class="repair-progress-bar"><div class="repair-progress-fill" style="width: 65%"></div></div>
+        <div class="repair-progress-text">65%</div>
+      </div>
+      <div class="repair-meta">
+        <div class="repair-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Est. 2 hrs left</span>
+        </div>
+        <div class="repair-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          <span>Tech: Marcus R.</span>
+        </div>
+      </div>
+    </div>
+    <div class="repair-card" onclick="switchScreen('bookings')">
+      <div class="repair-card-header">
+        <div>
+          <div class="repair-title">Brake Pads + Rotors</div>
+          <div class="repair-id">RPT-2026-0852</div>
+        </div>
+        <div class="repair-status scheduled">Scheduled</div>
+      </div>
+      <div class="repair-progress">
+        <div class="repair-progress-bar"><div class="repair-progress-fill" style="width: 0%"></div></div>
+        <div class="repair-progress-text">0%</div>
+      </div>
+      <div class="repair-meta">
+        <div class="repair-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Mar 18, 10:00 AM</span>
+        </div>
+        <div class="repair-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>$189.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOK SERVICE CTA -->
+  <div class="cta-section">
+    <button class="cta-button" onclick="switchScreen('bookings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span class="cta-button-text">Book a Service</span>
+    </button>
+  </div>
+
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ============================= -->
+<!-- SCREEN: TRACKER                -->
+<!-- ============================= -->
+<div class="screen" id="screen-tracker">
+  <div class="tracker-screen">
+    <div class="screen-title-bar">Repair Tracker</div>
+
+    <!-- Order lookup -->
+    <div class="order-lookup">
+      <input type="text" id="orderInput" placeholder="Enter order # (e.g. RPT-2026-0847)" value="RPT-2026-0847">
+      <button onclick="lookupOrder()">Track</button>
+    </div>
+
+    <!-- Tracker detail -->
+    <div id="trackerResult">
+      <div class="tracker-detail-card">
+        <div class="tracker-vehicle">
+          <div class="tracker-vehicle-info">
+            <div class="tv-label">Repair Order</div>
+            <div class="tv-name">Transmission Rebuild</div>
+            <div class="tv-sub">2024 BMW M3 Competition</div>
+          </div>
+          <div class="tracker-order-badge">RPT-2026-0847</div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="repair-timeline">
+          <div class="timeline-step done-step">
+            <div class="timeline-dot done">
+              <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="timeline-step-title">Vehicle Received</div>
+            <div class="timeline-step-desc">Vehicle checked in, keys secured</div>
+            <div class="timeline-step-time">Mar 4, 8:15 AM</div>
+          </div>
+
+          <div class="timeline-step done-step">
+            <div class="timeline-dot done">
+              <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="timeline-step-title">Diagnostic Complete</div>
+            <div class="timeline-step-desc">Transmission fault codes pulled, internal inspection done. Found worn clutch packs and damaged solenoid.</div>
+            <div class="timeline-step-time">Mar 4, 10:30 AM</div>
+          </div>
+
+          <div class="timeline-step done-step">
+            <div class="timeline-dot done">
+              <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="timeline-step-title">Parts Ordered</div>
+            <div class="timeline-step-desc">OEM clutch pack kit, solenoid assembly, filter, and gaskets ordered from BMW dealer</div>
+            <div class="timeline-step-time">Mar 4, 11:45 AM</div>
+          </div>
+
+          <div class="timeline-step active-step">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-step-title">Repair In Progress</div>
+            <div class="timeline-step-desc">Transmission removed, teardown underway. Replacing clutch packs and solenoid assembly.</div>
+            <div class="timeline-step-time">Started Mar 4, 2:00 PM</div>
+          </div>
+
+          <div class="timeline-step">
+            <div class="timeline-dot pending"></div>
+            <div class="timeline-step-title">Quality Check & Test Drive</div>
+            <div class="timeline-step-desc">Full road test, fluid level verification, scan for codes</div>
+          </div>
+
+          <div class="timeline-step">
+            <div class="timeline-dot pending"></div>
+            <div class="timeline-step-title">Ready for Pickup</div>
+            <div class="timeline-step-desc">Vehicle cleaned, final inspection complete</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assigned technician -->
+      <div class="tech-card">
+        <div class="tech-avatar">MR</div>
+        <div class="tech-info">
+          <div class="tech-name">Marcus Rodriguez</div>
+          <div class="tech-role">ASE / ATRA Certified Technician</div>
+        </div>
+        <button class="tech-contact-btn" onclick="alert('Calling (707) 584-7727...')">Call Shop</button>
+      </div>
+
+      <!-- Estimate section -->
+      <div class="section-header" style="padding: 0; margin-top: 8px;">
+        <div class="section-title">Estimate</div>
+      </div>
+      <div class="repair-card" style="cursor: default;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-secondary); font-size: 13px;">Clutch Pack Kit (OEM)</span>
+          <span style="font-family: 'Orbitron'; font-size: 12px; color: var(--text-primary);">$1,245.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-secondary); font-size: 13px;">Solenoid Assembly</span>
+          <span style="font-family: 'Orbitron'; font-size: 12px; color: var(--text-primary);">$389.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-secondary); font-size: 13px;">Gasket & Filter Kit</span>
+          <span style="font-family: 'Orbitron'; font-size: 12px; color: var(--text-primary);">$124.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-secondary); font-size: 13px;">Labor (6 hrs)</span>
+          <span style="font-family: 'Orbitron'; font-size: 12px; color: var(--text-primary);">$840.00</span>
+        </div>
+        <div style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; display: flex; justify-content: space-between;">
+          <span style="font-family: 'Orbitron'; font-size: 13px; font-weight: 700; color: var(--text-primary);">TOTAL</span>
+          <span style="font-family: 'Orbitron'; font-size: 15px; font-weight: 700; color: var(--red);">$2,598.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ============================= -->
+<!-- SCREEN: BOOKINGS               -->
+<!-- ============================= -->
+<div class="screen" id="screen-bookings">
+  <div class="bookings-screen">
+    <div class="screen-title-bar">Appointments</div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab(this, 'upcoming-tab')">Upcoming</button>
+      <button class="tab-btn" onclick="switchTab(this, 'past-tab')">Past</button>
+      <button class="tab-btn" onclick="switchTab(this, 'book-tab')">Book New</button>
+    </div>
+
+    <!-- Upcoming appointments -->
+    <div class="tab-content active" id="upcoming-tab">
+      <div class="appt-card" onclick="switchScreen('tracker')">
+        <div class="appt-date-badge">
+          <span class="month">Mar</span>
+          <span class="day">18</span>
+        </div>
+        <div class="appt-details">
+          <div class="appt-service">Brake Pads + Rotors</div>
+          <div class="appt-time">10:00 AM — Est. 2.5 hrs</div>
+          <div class="appt-vehicle-tag">2024 BMW M3 Competition</div>
+        </div>
+        <div class="appt-arrow">›</div>
+      </div>
+
+      <div class="appt-card">
+        <div class="appt-date-badge">
+          <span class="month">Apr</span>
+          <span class="day">05</span>
+        </div>
+        <div class="appt-details">
+          <div class="appt-service">Oil Change + Filter</div>
+          <div class="appt-time">9:00 AM — Est. 1 hr</div>
+          <div class="appt-vehicle-tag">2024 BMW M3 Competition</div>
+        </div>
+        <div class="appt-arrow">›</div>
+      </div>
+
+      <div class="appt-card">
+        <div class="appt-date-badge">
+          <span class="month">May</span>
+          <span class="day">12</span>
+        </div>
+        <div class="appt-details">
+          <div class="appt-service">Tire Rotation + Balance</div>
+          <div class="appt-time">11:30 AM — Est. 1 hr</div>
+          <div class="appt-vehicle-tag">2024 BMW M3 Competition</div>
+        </div>
+        <div class="appt-arrow">›</div>
+      </div>
+    </div>
+
+    <!-- Past appointments -->
+    <div class="tab-content" id="past-tab">
+      <div class="appt-card">
+        <div class="appt-date-badge" style="background: rgba(0,230,118,0.06); border-color: rgba(0,230,118,0.12);">
+          <span class="month" style="color: var(--green);">Feb</span>
+          <span class="day">14</span>
+        </div>
+        <div class="appt-details">
+          <div class="appt-service">Full Diagnostic Scan</div>
+          <div class="appt-time">Completed — 1.5 hrs</div>
+          <div class="appt-vehicle-tag" style="color: var(--tan);">$125.00</div>
+        </div>
+        <div class="appt-arrow">›</div>
+      </div>
+
+      <div class="appt-card">
+        <div class="appt-date-badge" style="background: rgba(0,230,118,0.06); border-color: rgba(0,230,118,0.12);">
+          <span class="month" style="color: var(--green);">Jan</span>
+          <span class="day">22</span>
+        </div>
+        <div class="appt-details">
+          <div class="appt-service">Transmission Fluid Change</div>
+          <div class="appt-time">Completed — 2 hrs</div>
+          <div class="appt-vehicle-tag" style="color: var(--tan);">$289.00</div>
+        </div>
+        <div class="appt-arrow">›</div>
+      </div>
+
+      <div class="appt-card">
+        <div class="appt-date-badge" style="background: rgba(0,230,118,0.06); border-color: rgba(0,230,118,0.12);">
+          <span class="month" style="color: var(--green);">Dec</span>
+          <span class="day">08</span>
+        </div>
+        <div class="appt-details">
+          <div class="appt-service">Oil Change + Inspection</div>
+          <div class="appt-time">Completed — 1 hr</div>
+          <div class="appt-vehicle-tag" style="color: var(--tan);">$89.00</div>
+        </div>
+        <div class="appt-arrow">›</div>
+      </div>
+    </div>
+
+    <!-- Book new -->
+    <div class="tab-content" id="book-tab">
+      <div class="book-form">
+        <div class="form-group">
+          <label class="form-label">Service Type</label>
+          <select class="form-select" id="serviceSelect">
+            <option value="">Select a service...</option>
+            <option value="transmission">Transmission Repair</option>
+            <option value="diagnostic">Full Diagnostic Scan</option>
+            <option value="brakes">Brake Service</option>
+            <option value="oil">Oil Change</option>
+            <option value="tires">Tire Service</option>
+            <option value="tuneup">Engine Tune-Up</option>
+            <option value="electrical">Electrical Repair</option>
+            <option value="fluid">Transmission Fluid Change</option>
+            <option value="other">Other / Not Sure</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Vehicle</label>
+          <select class="form-select">
+            <option value="bmw">2024 BMW M3 Competition xDrive</option>
+            <option value="add">+ Add another vehicle</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Preferred Date</label>
+            <input type="date" class="form-input" id="bookDate" value="2026-03-20">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <select class="form-select" id="bookTime">
+              <option value="8:00">8:00 AM</option>
+              <option value="9:00" selected>9:00 AM</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="13:00">1:00 PM</option>
+              <option value="14:00">2:00 PM</option>
+              <option value="15:00">3:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Describe the Issue (Optional)</label>
+          <textarea class="form-input" rows="3" placeholder="e.g. Grinding noise when braking, check engine light on..." style="resize: none; min-height: 80px;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <p class="form-note">Appointments are subject to availability. We'll confirm via text within 1 hour during business hours (Mon–Fri, 8 AM – 5 PM).</p>
+        </div>
+
+        <button class="cta-button" onclick="bookAppointment()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="cta-button-text">Request Appointment</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ============================= -->
+<!-- SCREEN: MAINTENANCE            -->
+<!-- ============================= -->
+<div class="screen" id="screen-maintenance">
+  <div class="maint-screen">
+    <div class="screen-title-bar">Maintenance Tracker</div>
+
+    <div class="section-header" style="padding: 0 0 4px;">
+      <div class="section-title">Upcoming Service</div>
+    </div>
+
+    <!-- Transmission Fluid - URGENT -->
+    <div class="maint-card">
+      <div class="maint-card-header">
+        <div class="maint-service-name">Transmission Fluid</div>
+        <div class="maint-due-badge urgent">Overdue</div>
+      </div>
+      <div class="maint-progress-row">
+        <div class="maint-bar"><div class="maint-bar-fill red" style="width: 95%"></div></div>
+        <div class="maint-percentage red">95%</div>
+      </div>
+      <div class="maint-detail-row">
+        <div class="maint-detail">Last: <strong>Jan 22, 2026</strong></div>
+        <div class="maint-detail">Due: <strong>Now</strong></div>
+      </div>
+      <div class="maint-detail-row" style="margin-top: 4px;">
+        <div class="maint-detail">Interval: 15,000 mi</div>
+        <div class="maint-detail">Current: <strong>14,850 mi</strong></div>
+      </div>
+    </div>
+
+    <!-- Brake Pads - SOON -->
+    <div class="maint-card">
+      <div class="maint-card-header">
+        <div class="maint-service-name">Brake Pads (Front)</div>
+        <div class="maint-due-badge soon">Due Soon</div>
+      </div>
+      <div class="maint-progress-row">
+        <div class="maint-bar"><div class="maint-bar-fill yellow" style="width: 72%"></div></div>
+        <div class="maint-percentage yellow">72%</div>
+      </div>
+      <div class="maint-detail-row">
+        <div class="maint-detail">Last: <strong>Sep 10, 2025</strong></div>
+        <div class="maint-detail">Due: <strong>~Mar 2026</strong></div>
+      </div>
+      <div class="maint-detail-row" style="margin-top: 4px;">
+        <div class="maint-detail">Pad life remaining</div>
+        <div class="maint-detail"><strong>28%</strong></div>
+      </div>
+    </div>
+
+    <!-- Oil Change - SOON -->
+    <div class="maint-card">
+      <div class="maint-card-header">
+        <div class="maint-service-name">Engine Oil + Filter</div>
+        <div class="maint-due-badge soon">1,520 mi</div>
+      </div>
+      <div class="maint-progress-row">
+        <div class="maint-bar"><div class="maint-bar-fill yellow" style="width: 65%"></div></div>
+        <div class="maint-percentage yellow">65%</div>
+      </div>
+      <div class="maint-detail-row">
+        <div class="maint-detail">Last: <strong>Dec 8, 2025</strong></div>
+        <div class="maint-detail">Due: <strong>~14,000 mi</strong></div>
+      </div>
+    </div>
+
+    <!-- Tires - GOOD -->
+    <div class="maint-card">
+      <div class="maint-card-header">
+        <div class="maint-service-name">Tire Rotation</div>
+        <div class="maint-due-badge good">Good</div>
+      </div>
+      <div class="maint-progress-row">
+        <div class="maint-bar"><div class="maint-bar-fill green" style="width: 30%"></div></div>
+        <div class="maint-percentage green">30%</div>
+      </div>
+      <div class="maint-detail-row">
+        <div class="maint-detail">Last: <strong>Feb 1, 2026</strong></div>
+        <div class="maint-detail">Due: <strong>~Aug 2026</strong></div>
+      </div>
+    </div>
+
+    <!-- Coolant - GOOD -->
+    <div class="maint-card">
+      <div class="maint-card-header">
+        <div class="maint-service-name">Coolant Flush</div>
+        <div class="maint-due-badge good">Good</div>
+      </div>
+      <div class="maint-progress-row">
+        <div class="maint-bar"><div class="maint-bar-fill green" style="width: 20%"></div></div>
+        <div class="maint-percentage green">20%</div>
+      </div>
+      <div class="maint-detail-row">
+        <div class="maint-detail">Last: <strong>Oct 15, 2025</strong></div>
+        <div class="maint-detail">Due: <strong>~Oct 2027</strong></div>
+      </div>
+    </div>
+
+    <!-- Spark Plugs - GOOD -->
+    <div class="maint-card">
+      <div class="maint-card-header">
+        <div class="maint-service-name">Spark Plugs</div>
+        <div class="maint-due-badge good">Good</div>
+      </div>
+      <div class="maint-progress-row">
+        <div class="maint-bar"><div class="maint-bar-fill green" style="width: 15%"></div></div>
+        <div class="maint-percentage green">15%</div>
+      </div>
+      <div class="maint-detail-row">
+        <div class="maint-detail">Last: <strong>Jun 2025</strong></div>
+        <div class="maint-detail">Due: <strong>~60,000 mi</strong></div>
+      </div>
+    </div>
+
+    <!-- Service History -->
+    <div class="section-header" style="padding: 0; margin-top: 16px;">
+      <div class="section-title">Service History</div>
+      <a class="section-link">Export →</a>
+    </div>
+
+    <div class="history-item">
+      <div class="history-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="history-info">
+        <div class="history-service">Full Diagnostic Scan</div>
+        <div class="history-date">Feb 14, 2026</div>
+      </div>
+      <div class="history-cost">$125</div>
+    </div>
+    <div class="history-item">
+      <div class="history-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="history-info">
+        <div class="history-service">Tire Rotation + Balance</div>
+        <div class="history-date">Feb 1, 2026</div>
+      </div>
+      <div class="history-cost">$85</div>
+    </div>
+    <div class="history-item">
+      <div class="history-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="history-info">
+        <div class="history-service">Trans Fluid Change</div>
+        <div class="history-date">Jan 22, 2026</div>
+      </div>
+      <div class="history-cost">$289</div>
+    </div>
+    <div class="history-item">
+      <div class="history-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="history-info">
+        <div class="history-service">Oil Change + Inspection</div>
+        <div class="history-date">Dec 8, 2025</div>
+      </div>
+      <div class="history-cost">$89</div>
+    </div>
+    <div class="history-item">
+      <div class="history-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="history-info">
+        <div class="history-service">Coolant Flush</div>
+        <div class="history-date">Oct 15, 2025</div>
+      </div>
+      <div class="history-cost">$145</div>
+    </div>
+    <div class="history-item">
+      <div class="history-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="history-info">
+        <div class="history-service">Brake Pads (Rear)</div>
+        <div class="history-date">Sep 10, 2025</div>
+      </div>
+      <div class="history-cost">$245</div>
+    </div>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ============================= -->
+<!-- SCREEN: PROFILE                -->
+<!-- ============================= -->
+<div class="screen" id="screen-profile">
+  <div class="profile-screen">
+    <div class="screen-title-bar">Profile</div>
+
+    <!-- Profile header -->
+    <div class="profile-header-card">
+      <div class="profile-avatar">JL</div>
+      <div class="profile-name">Jason LaSalle</div>
+      <div class="profile-member">Customer since 2023</div>
+      <div class="profile-stats-row">
+        <div class="profile-stat">
+          <div class="profile-stat-value">12</div>
+          <div class="profile-stat-label">Services</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-value">1</div>
+          <div class="profile-stat-label">Vehicle</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-value">4.9</div>
+          <div class="profile-stat-label">Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicle details -->
+    <div class="section-header" style="padding: 0;">
+      <div class="section-title">My Vehicle</div>
+    </div>
+    <div class="vehicle-detail-card">
+      <div class="vehicle-detail-row">
+        <span class="vd-label">Make / Model</span>
+        <span class="vd-value">BMW M3 Competition</span>
+      </div>
+      <div class="vehicle-detail-row">
+        <span class="vd-label">Year</span>
+        <span class="vd-value">2024</span>
+      </div>
+      <div class="vehicle-detail-row">
+        <span class="vd-label">Trim</span>
+        <span class="vd-value">xDrive</span>
+      </div>
+      <div class="vehicle-detail-row">
+        <span class="vd-label">Mileage</span>
+        <span class="vd-value">12,480 mi</span>
+      </div>
+      <div class="vehicle-detail-row">
+        <span class="vd-label">VIN</span>
+        <span class="vd-value">WBS43AZ0...7F42</span>
+      </div>
+      <div class="vehicle-detail-row">
+        <span class="vd-label">License Plate</span>
+        <span class="vd-value">8RPT 626</span>
+      </div>
+    </div>
+
+    <!-- Shop info -->
+    <div class="section-header" style="padding: 0; margin-top: 8px;">
+      <div class="section-title">Our Shop</div>
+    </div>
+    <div class="shop-info-card">
+      <div class="shop-info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div class="shop-info-text">
+          305 Laguna Dr, Rohnert Park, CA 94928
+          <span class="small">Family-owned since 1997</span>
+        </div>
+      </div>
+      <div class="shop-info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <div class="shop-info-text">
+          <a href="tel:7075847727">(707) 584-7727</a>
+        </div>
+      </div>
+      <div class="shop-info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="shop-info-text">
+          Mon – Fri: 8:00 AM – 5:00 PM
+          <span class="small">Sat – Sun: Closed</span>
+        </div>
+      </div>
+      <div class="shop-info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div class="shop-info-text">
+          ASE & ATRA Certified
+          <span class="small">Built on family values: Delivering integrity in every repair</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings menu -->
+    <div class="section-header" style="padding: 0; margin-top: 8px;">
+      <div class="section-title">Settings</div>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Notifications</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span>Privacy & Security</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Payment Methods</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>App Settings</span>
+      <span class="chevron">›</span>
+    </div>
+
+    <div style="text-align: center; padding: 24px 0 8px;">
+      <p style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px; font-family: 'Orbitron'; font-weight: 500;">RPT · ROHNERT PARK TRANSMISSION</p>
+      <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">rohnertparktransmission.com</p>
+    </div>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ============================= -->
+<!-- SCREEN: NOTIFICATIONS          -->
+<!-- ============================= -->
+<div class="screen" id="screen-notifications">
+  <div class="notif-screen">
+    <div class="screen-title-bar">Notifications</div>
+
+    <div class="notif-card notif-repair unread">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5"/><circle cx="9" cy="9" r="2"/><circle cx="17" cy="17" r="4"/><circle cx="17" cy="17" r="1.5"/><path d="M13 13L14 14"/></svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Repair In Progress</div>
+        <div class="notif-msg">Great news! Marcus has started the transmission rebuild on your BMW M3. The clutch packs and solenoid assembly are being replaced now.</div>
+        <div class="notif-time">Today, 2:00 PM</div>
+      </div>
+    </div>
+
+    <div class="notif-card notif-repair unread">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Parts Ordered</div>
+        <div class="notif-msg">OEM clutch pack kit and solenoid assembly ordered from BMW dealer. Parts expected to arrive by end of day.</div>
+        <div class="notif-time">Today, 11:45 AM</div>
+      </div>
+    </div>
+
+    <div class="notif-card notif-repair">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Diagnostic Complete</div>
+        <div class="notif-msg">We found worn clutch packs and a damaged solenoid in your transmission. Estimate has been updated in your tracker.</div>
+        <div class="notif-time">Today, 10:30 AM</div>
+      </div>
+    </div>
+
+    <div class="notif-card notif-complete">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Vehicle Received</div>
+        <div class="notif-msg">Your 2024 BMW M3 has been checked in. Keys are secured and we'll begin the inspection shortly.</div>
+        <div class="notif-time">Today, 8:15 AM</div>
+      </div>
+    </div>
+
+    <div class="notif-card notif-reminder">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Maintenance Reminder</div>
+        <div class="notif-msg">Your transmission fluid is overdue for service. We recommend scheduling an appointment soon to keep your M3 running smooth.</div>
+        <div class="notif-time">Yesterday, 9:00 AM</div>
+      </div>
+    </div>
+
+    <div class="notif-card notif-reminder">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Appointment Confirmed</div>
+        <div class="notif-msg">Your brake pad service is confirmed for Mar 18 at 10:00 AM. See you then!</div>
+        <div class="notif-time">Mar 2, 2:30 PM</div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ============================= -->
+<!-- BOTTOM NAV                     -->
+<!-- ============================= -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="switchScreen('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-item" onclick="switchScreen('tracker')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <span class="nav-label">Tracker</span>
+  </button>
+  <button class="nav-item" onclick="switchScreen('bookings')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+    <span class="nav-label">Bookings</span>
+  </button>
+  <button class="nav-item" onclick="switchScreen('maintenance')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+    </svg>
+    <span class="nav-label">Maint.</span>
+  </button>
+  <button class="nav-item" onclick="switchScreen('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/>
+    </svg>
+    <span class="nav-label">Profile</span>
+  </button>
+</nav>
+
+<script>
+  // === THEME TOGGLE ===
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      html.removeAttribute('data-theme');
+      localStorage.setItem('rpt-theme', 'light');
+    } else {
+      html.setAttribute('data-theme', 'dark');
+      localStorage.setItem('rpt-theme', 'dark');
+    }
+  }
+
+  // Initialize theme from localStorage or system preference
+  (function initTheme() {
+    const saved = localStorage.getItem('rpt-theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+
+  // === SCREEN NAVIGATION ===
+  function switchScreen(screenId) {
+    // Hide all screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    // Show target
+    const target = document.getElementById('screen-' + screenId);
+    if (target) {
+      target.classList.add('active');
+      target.style.animation = 'fadeIn 0.25s ease';
+    }
+    // Update nav — notifications doesn't have a nav button so clear all
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navMap = { home: 0, tracker: 1, bookings: 2, maintenance: 3, profile: 4 };
+    const idx = navMap[screenId];
+    if (idx !== undefined) {
+      document.querySelectorAll('.nav-item')[idx].classList.add('active');
+    }
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  // === TAB SWITCHING (Bookings) ===
+  function switchTab(btn, tabId) {
+    // Update buttons
+    btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // Update content
+    btn.closest('.bookings-screen').querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  // === ORDER LOOKUP ===
+  function lookupOrder() {
+    const input = document.getElementById('orderInput').value.trim().toUpperCase();
+    const result = document.getElementById('trackerResult');
+
+    if (!input) {
+      alert('Please enter a repair order number (e.g., RPT-2026-0847)');
+      return;
+    }
+
+    // Simulate lookup — in production this would call an API
+    if (input === 'RPT-2026-0847') {
+      result.style.display = 'block';
+      result.style.animation = 'fadeInUp 0.4s ease';
+    } else if (input === 'RPT-2026-0852') {
+      alert('Order RPT-2026-0852: Brake Pads + Rotors\nStatus: Scheduled for Mar 18, 10:00 AM\nProgress: Not yet started');
+    } else {
+      alert('Order "' + input + '" not found.\n\nTry: RPT-2026-0847 or RPT-2026-0852');
+    }
+  }
+
+  // === BOOK APPOINTMENT ===
+  function bookAppointment() {
+    const service = document.getElementById('serviceSelect').value;
+    const date = document.getElementById('bookDate').value;
+    const time = document.getElementById('bookTime').value;
+
+    if (!service) {
+      alert('Please select a service type.');
+      return;
+    }
+
+    const serviceNames = {
+      transmission: 'Transmission Repair',
+      diagnostic: 'Full Diagnostic Scan',
+      brakes: 'Brake Service',
+      oil: 'Oil Change',
+      tires: 'Tire Service',
+      tuneup: 'Engine Tune-Up',
+      electrical: 'Electrical Repair',
+      fluid: 'Transmission Fluid Change',
+      other: 'General Service'
+    };
+
+    const formatted = new Date(date + 'T' + time).toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+    });
+
+    alert(
+      '✓ Appointment Request Submitted!\n\n' +
+      'Service: ' + serviceNames[service] + '\n' +
+      'Date: ' + formatted + '\n' +
+      'Time: ' + time + '\n\n' +
+      'Rohnert Park Transmission will confirm via text within 1 hour during business hours.\n\n' +
+      'Questions? Call (707) 584-7727'
+    );
+
+    // Switch to upcoming tab
+    switchTab(document.querySelector('.tab-btn'), 'upcoming-tab');
+  }
+
+  // === ENTER key on order input ===
+  document.getElementById('orderInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') lookupOrder();
+  });
+
+  // === SERVICE WORKER ===
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+</script>
+
+</body>
+</html>
